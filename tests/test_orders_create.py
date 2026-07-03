@@ -6,6 +6,7 @@ from data import OrderData
 from urls import Urls
 
 
+
 class TestOrderCreate:
 
     @allure.title('Проверка создания заказа с разными параметрами цвета')

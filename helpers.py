@@ -1,3 +1,6 @@
+import allure
+import random
+import string
 from faker import Faker
 
 fake = Faker()
