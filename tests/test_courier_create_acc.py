@@ -20,18 +20,16 @@ class TestCourierCreate:
         response = requests.post(Urls.URL_COURIER_CREATE, data=payload)
         assert response.status_code == 201 and response.json() == {'ok': True}
 
-    import allure
-from api.courier_api import create_courier
-
     @allure.title('Проверка получения ошибки при повторном использовании логина для создания курьера')
     @allure.description('Проверяется только статус-код ответа.')
     def test_create_courier_account_login_taken_conflict(self, create_courier):
-        login, password, firstname = create_courier  # первый курьер уже создан в фикстуре
+        login, password, firstname = create_courier  # курьер уже создан в фикстуре
 
-        # Второй запрос с теми же данными – ожидаем конфликт
-        second_response = create_courier(login, password, firstname)
-        assert second_response.status_code == 409, "Повторное создание с тем же логином должно вернуть 409"
-
+        with allure.step('Попытка создать второго курьера с тем же логином'):
+            second_response = create_courier(login, password, firstname)
+        
+        assert second_response.status_code == 409, \
+            "Повторное создание с тем же логином должно вернуть 409"
     @allure.title('Проверка получения ошибки при создании курьера с незаполненными обязательными полями')
     @allure.description('В тест по очереди передаются наборы данных с пустым логином или паролем. '
                         'Проверяются код и тело ответа.')

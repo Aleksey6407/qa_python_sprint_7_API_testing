@@ -1,9 +1,10 @@
-# api/courier_api.py
 import requests
+import allure
 from urls import Urls
 
+@allure.step('Создание курьера с логином "{login}"')
 def create_courier(login: str, password: str, firstname: str):
-    """Создание курьера."""
+    """Отправляет запрос на создание курьера."""
     payload = {
         "login": login,
         "password": password,
@@ -11,16 +12,16 @@ def create_courier(login: str, password: str, firstname: str):
     }
     return requests.post(Urls.URL_COURIER_CREATE, data=payload)
 
+@allure.step('Логин курьера с логином "{login}"')
 def login_courier(login: str, password: str):
-    """Логин курьера."""
+    """Отправляет запрос на аутентификацию курьера."""
     payload = {
         "login": login,
         "password": password
     }
     return requests.post(Urls.URL_COURIER_LOGIN, data=payload)
 
+@allure.step('Удаление курьера по ID {courier_id}')
 def delete_courier(courier_id: int):
-    """Удаление курьера по ID."""
-    # URL должен быть шаблоном, например: URL_COURIER_DELETE = f'{URL_BASIC}api/v1/courier/{}'
-    url = Urls.URL_COURIER_DELETE.format(courier_id)
-    return requests.delete(url)
+    """Отправляет запрос на удаление курьера по его идентификатору."""
+    return requests.delete(f"{Urls.URL_COURIER_BASE}/{courier_id}")
