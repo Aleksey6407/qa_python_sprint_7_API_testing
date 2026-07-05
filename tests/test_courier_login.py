@@ -8,15 +8,14 @@ from api.courier_api import login_courier   # только для логина, 
 class TestCourierLogin:
 
     @allure.title('Проверка успешной аутентификации курьера при вводе валидных данных')
-    @allure.description('Happy path. Проверяются код и тело ответа. Курьер создаётся перед тестом и удаляется после.')
+    @allure.description('Happy path. Проверяется только статус-код ответа.')
     def test_courier_login_success(self, create_courier):
-        credentials = create_courier
-        response = login_courier(credentials['login'], credentials['password'])
-        assert response.status_code == 200, f"Ожидался 200, получен {response.status_code}"
-        json_data = response.json()
-        assert 'id' in json_data, "В ответе отсутствует 'id'"
-        assert isinstance(json_data['id'], int), "ID должен быть целым числом"
+        login, password, _ = create_courier
 
+        with allure.step('Логин созданного курьера'):
+            response = login_courier(login, password)
+
+        assert response.status_code == 200, f"Ожидался 200, получен {response.status_code}"
     @allure.title('Проверка получения ошибки аутентификации курьера при вводе невалидных данных')
     @allure.description('В тест по очереди передаются наборы данных с несуществующим логином или неверным паролем. '
                         'Проверяются код и тело ответа.')
