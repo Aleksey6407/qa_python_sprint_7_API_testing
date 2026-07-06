@@ -22,14 +22,20 @@ class TestCourierCreate:
 
     @allure.title('Проверка получения ошибки при повторном использовании логина для создания курьера')
     @allure.description('Проверяется только статус-код ответа.')
-    def test_create_courier_account_login_taken_conflict(self, create_courier):
-        login, password, firstname = create_courier  # курьер уже создан в фикстуре
+    def test_create_courier_account_login_taken_conflict(create_courier_fixture):
+        login, password, firstname = create_courier_fixture
 
         with allure.step('Попытка создать второго курьера с тем же логином'):
             second_response = create_courier(login, password, firstname)
-        
+
+        # Проверяем статус
         assert second_response.status_code == 409, \
             "Повторное создание с тем же логином должно вернуть 409"
+        
+        # Проверяем тело ответа
+        error_message = second_response.json().get('message')
+        assert error_message == "Этот логин уже используется", \
+            f"Ожидалось сообщение 'Этот логин уже используется', получено: {error_message}"
     @allure.title('Проверка получения ошибки при создании курьера с незаполненными обязательными полями')
     @allure.description('В тест по очереди передаются наборы данных с пустым логином или паролем. '
                         'Проверяются код и тело ответа.')
