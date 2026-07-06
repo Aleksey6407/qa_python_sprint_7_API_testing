@@ -2,7 +2,7 @@ import allure
 import pytest
 from data import Data
 from helpers import create_random_login, create_random_password
-from api.courier_api import login_courier   # только для логина, т.к. создание и удаление в фикстуре
+from api.courier_api import login_courier
 
 
 class TestCourierLogin:

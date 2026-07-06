@@ -17,7 +17,7 @@ def create_courier_fixture():
 
     with allure.step(f'Создание курьера (логин: {login})'):
         create_response = create_courier(login, password, firstname)
-        # Не проверяем статус здесь - это будет в тесте
+        # Проверяем успешность создания в тесте, не здесь
 
     yield login, password, firstname
 

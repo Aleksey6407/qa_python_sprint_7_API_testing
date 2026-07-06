@@ -4,7 +4,7 @@ import pytest
 from data import Data
 from urls import Urls
 from helpers import create_random_login, create_random_password, create_random_firstname
-
+from api.courier_api import create_courier
 
 
 class TestCourierCreate:
@@ -21,7 +21,7 @@ class TestCourierCreate:
         assert response.status_code == 201 and response.json() == {'ok': True}
 
     @allure.title('Проверка получения ошибки при повторном использовании логина для создания курьера')
-    @allure.description('Проверяется только статус-код ответа.')
+    @allure.description('Проверяются статус-код и тело ответа.')
     def test_create_courier_account_login_taken_conflict(create_courier_fixture):
         login, password, firstname = create_courier_fixture
 
