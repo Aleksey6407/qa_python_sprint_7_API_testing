@@ -1,7 +1,7 @@
 import pytest
 import allure
 from api.courier_api import create_courier, login_courier, delete_courier
-from helpers import generate_random_login, generate_random_password, generate_random_firstname
+from helpers import create_random_login, create_random_password, create_random_firstname
 
 
 @pytest.fixture
@@ -11,13 +11,12 @@ def create_courier_fixture():
     После теста логинится, получает ID и удаляет курьера.
     Возвращает: login, password, firstname
     """
-    login = generate_random_login()
-    password = generate_random_password()
-    firstname = generate_random_firstname()
+    login = create_random_login()
+    password = create_random_password()
+    firstname = create_random_firstname()
 
     with allure.step(f'Создание курьера (логин: {login})'):
-        create_response = create_courier(login, password, firstname)
-        # Проверяем успешность создания в тесте, не здесь
+        create_courier(login, password, firstname)
 
     yield login, password, firstname
 
@@ -28,3 +27,12 @@ def create_courier_fixture():
             courier_id = login_response.json().get('id')
             if courier_id:
                 delete_courier(courier_id)
+
+
+@pytest.fixture(params=[
+    {'login': '', 'password': 'password123'},   # пустой login
+    {'login': 'login', 'password': ''},         # пустой password
+])
+def empty_credentials(request):
+    """Фикстура с пустыми полями login/password для теста создания курьера."""
+    return request.param
